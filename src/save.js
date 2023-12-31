@@ -11,9 +11,10 @@ export default function save({ attributes }) {
 				value={skillTitle || __("Skills", "skills-section")}
 			/>
 			{selectedIcons.length > 0 && (
-				<ul style={{ listStyle: "none", display: "flex" }}>
+				<ul className="wp-block-skills-section-list">
 					{selectedIcons.map((icon) => (
 						<li
+							className="wp-block-skills-section-list-item"
 							style={{
 								display: "flex",
 								flexDirection: "column",
@@ -22,8 +23,8 @@ export default function save({ attributes }) {
 							}}
 							key={icon.name}
 						>
-							<img src={icon.src} alt={icon.name} style={{ width: "50px" }} />
-							<p style={{ fontSize: "14px" }}>{icon.name}</p>
+							<img src={icon.src} alt={icon.name} />
+							<p>{icon.name}</p>
 						</li>
 					))}
 				</ul>

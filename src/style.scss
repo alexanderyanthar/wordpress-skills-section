@@ -4,3 +4,42 @@
  *
  * Replace them with your own styles or remove the file completely.
  */
+
+.wp-block-skills-section-list {
+	list-style-type: none;
+	display: grid;
+	grid-template-columns: repeat(15, 1fr);
+
+	.wp-block-skills-section-list-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin-right: 16px;
+
+		img {
+			width: 50px;
+		}
+
+		p {
+			font-size: 14px;
+		}
+	}
+}
+
+@media (max-width: 1300px) {
+	.wp-block-skills-section-list {
+		grid-template-columns: repeat(7, 1fr);
+	}
+}
+
+@media (max-width: 768px) {
+	.wp-block-skills-section-list {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+@media (max-width: 460px) {
+	.wp-block-skills-section-list {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}

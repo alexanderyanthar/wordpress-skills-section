@@ -8,6 +8,19 @@ import {
 	EXTRA_SKILLS,
 	BACK_END_SKILLS,
 } from "./constants/skills";
+import {
+	DndContext,
+	useSensor,
+	useSensors,
+	PointerSensor,
+} from "@dnd-kit/core";
+import {
+	SortableContext,
+	horizontalListSortingStrategy,
+	arrayMove,
+} from "@dnd-kit/sortable";
+import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
+import SortableItem from "./sortableItem";
 
 export default function Edit({ attributes, setAttributes }) {
 	const { skillTitle, selectedIcons } = attributes;
@@ -18,6 +31,19 @@ export default function Edit({ attributes, setAttributes }) {
 
 	const onIconChange = (newIcons) => {
 		setAttributes({ selectedIcons: newIcons });
+	};
+
+	const sensors = useSensors(useSensor(PointerSensor));
+
+	const handleDragEnd = (e) => {
+		const { active, over } = e;
+		if (active.id !== over.id) {
+			const oldIndex = selectedIcons.findIndex((i) => active.id === i.name);
+			const newIndex = selectedIcons.findIndex((i) => over.id === i.name);
+			setAttributes({
+				selectedIcons: arrayMove(selectedIcons, oldIndex, newIndex),
+			});
+		}
 	};
 
 	return (
@@ -32,25 +58,28 @@ export default function Edit({ attributes, setAttributes }) {
 				/>
 
 				{selectedIcons.length > 0 && (
-					<ul style={{ listStyle: "none", display: "flex" }}>
-						{selectedIcons.map((icon) => (
-							<li
-								style={{
-									display: "flex",
-									flexDirection: "column",
-									alignItems: "center",
-									marginRight: "16px",
-								}}
-								key={icon.name}
+					<ul className="wp-block-skills-section-list">
+						<DndContext
+							sensors={sensors}
+							onDragEnd={handleDragEnd}
+							modifiers={[restrictToHorizontalAxis]}
+						>
+							<SortableContext
+								items={selectedIcons.map((icon) => icon.name)}
+								strategy={horizontalListSortingStrategy}
 							>
-								{icon.src && (
-									<>
-										<img src={icon.src} style={{ width: "50px" }} />
-										<p style={{ fontSize: "14px" }}>{icon.name}</p>
-									</>
-								)}
-							</li>
-						))}
+								{selectedIcons.map((icon, index) => {
+									return (
+										<SortableItem
+											key={icon.name}
+											id={icon.name}
+											index={index}
+											icon={icon}
+										/>
+									);
+								})}
+							</SortableContext>
+						</DndContext>
 					</ul>
 				)}
 
@@ -81,13 +110,16 @@ export default function Edit({ attributes, setAttributes }) {
 					{BACK_END_SKILLS &&
 						BACK_END_SKILLS.map((skill) => (
 							<CheckboxControl
+								key={skill.name}
 								label={skill.name}
-								checked={selectedIcons.includes(skill.name)}
+								checked={selectedIcons.some((icon) => icon.name === skill.name)}
 								onChange={(checked) =>
 									onIconChange(
 										checked
-											? [...selectedIcons, skill.name]
-											: selectedIcons.filter((icon) => icon !== skill.name),
+											? [...selectedIcons, skill]
+											: selectedIcons.filter(
+													(icon) => icon.name !== skill.name,
+											  ),
 									)
 								}
 							/>
@@ -97,13 +129,16 @@ export default function Edit({ attributes, setAttributes }) {
 					{EXTRA_SKILLS &&
 						EXTRA_SKILLS.map((skill) => (
 							<CheckboxControl
+								key={skill.name}
 								label={skill.name}
-								checked={selectedIcons.includes(skill.name)}
+								checked={selectedIcons.some((icon) => icon.name === skill.name)}
 								onChange={(checked) =>
 									onIconChange(
 										checked
-											? [...selectedIcons, skill.name]
-											: selectedIcons.filter((icon) => icon !== skill.name),
+											? [...selectedIcons, skill]
+											: selectedIcons.filter(
+													(icon) => icon.name !== skill.name,
+											  ),
 									)
 								}
 							/>
