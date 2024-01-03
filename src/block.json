@@ -6,7 +6,7 @@
 	"title": "Skills Section",
 	"category": "media",
 	"icon": "editor-ul",
-	"description": "Example block scaffolded with Create Block tool.",
+	"description": "A block to list your developer skills",
 	"example": {},
 	"supports": {
 		"html": false

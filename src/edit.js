@@ -1,5 +1,5 @@
 import { __ } from "@wordpress/i18n";
-import { useBlockProps, InnerBlocks } from "@wordpress/block-editor";
+import { useBlockProps } from "@wordpress/block-editor";
 import { RichText } from "@wordpress/block-editor";
 import { PanelBody, CheckboxControl } from "@wordpress/components";
 import "./editor.scss";
@@ -14,12 +14,7 @@ import {
 	useSensors,
 	PointerSensor,
 } from "@dnd-kit/core";
-import {
-	SortableContext,
-	horizontalListSortingStrategy,
-	arrayMove,
-} from "@dnd-kit/sortable";
-import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
+import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import SortableItem from "./sortableItem";
 
 export default function Edit({ attributes, setAttributes }) {
@@ -59,15 +54,8 @@ export default function Edit({ attributes, setAttributes }) {
 
 				{selectedIcons.length > 0 && (
 					<ul className="wp-block-skills-section-list">
-						<DndContext
-							sensors={sensors}
-							onDragEnd={handleDragEnd}
-							modifiers={[restrictToHorizontalAxis]}
-						>
-							<SortableContext
-								items={selectedIcons.map((icon) => icon.name)}
-								strategy={horizontalListSortingStrategy}
-							>
+						<DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+							<SortableContext items={selectedIcons.map((icon) => icon.name)}>
 								{selectedIcons.map((icon, index) => {
 									return (
 										<SortableItem
@@ -83,7 +71,7 @@ export default function Edit({ attributes, setAttributes }) {
 					</ul>
 				)}
 
-				<PanelBody title="Select Front End Skills">
+				<PanelBody title={__("Select Front End Skills", "skill-section")}>
 					{FRONT_END_SKILLS &&
 						FRONT_END_SKILLS.map((skill) => (
 							<>
